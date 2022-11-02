@@ -13,47 +13,27 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Entity(name = "credit")
-@TypeDef(
-        name = "jsonb",
-        typeClass = JsonBinaryType.class
-)
+@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @Data
 public class Credit {
     @Id
-    @SequenceGenerator(
-            name = "credit_sequence",
-            sequenceName = "credit_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "credit_sequence"
-    )
+    @SequenceGenerator(name = "credit_sequence", sequenceName = "credit_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "credit_sequence")
 
     private Long id;
     private BigDecimal amount;
     private Integer term;
     private BigDecimal rate;
-    @Column(
-            name = "full_loan_cost"
-    )
+    @Column(name = "full_loan_cost")
     private BigDecimal flc;
     @Type(type = "jsonb")
-    @Column(
-            name = "paymentSchedule"
-    )
+    @Column(name = "paymentSchedule")
     private List<PaymentScheduleElement> paymentSchedule;
-    @Column(
-            name = "is_insurance_enabled"
-    )
+    @Column(name = "is_insurance_enabled")
     private Boolean isInsuranceEnabled;
-    @Column(
-            name = "is_salary_client"
-    )
+    @Column(name = "is_salary_client")
     private Boolean isSalaryClient;
-    @Column(
-            name = "credit_status"
-    )
+    @Column(name = "credit_status")
     private CreditStatus creditStatus;
 
     @OneToOne(mappedBy = "credit")
