@@ -69,13 +69,13 @@ public class Client {
             name = "gender",
             nullable = false
     )
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     @Column(
             name = "marital_status",
             nullable = false
     )
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private MaritalStatus maritalStatus;
     @Column(name = "dependent_number")
     private Integer dependentNumber;

@@ -13,49 +13,29 @@ import java.util.List;
 
 
 @Entity(name = "application")
-@TypeDef(
-        name = "jsonb",
-        typeClass = JsonBinaryType.class
-)
+@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @Data
 public class Application {
     @Id
-    @SequenceGenerator(
-            name = "application_sequence",
-            sequenceName = "application_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "application_sequence"
-    )
+    @SequenceGenerator(name = "application_sequence", sequenceName = "application_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "application_sequence")
     private Long id;
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Status status;
-    @Column(
-            name = "creation_date"
-    )
+    @Column(name = "creation_date")
     private Date creationDate;
-    @Column(
-            name = "applied_offer"
-    )
+    @Column(name = "applied_offer")
     private String appliedOffer;
-    @Column(
-            name = "sign_date"
-    )
+    @Column(name = "sign_date")
     private Date signDate;
-    @Column(
-            name = "ses_code"
-    )
+    @Column(name = "ses_code")
     private String sesCode;
     @Column(name = "status_history")
     @Type(type = "jsonb")
     private List<Status> statusHistory;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     private Client client;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "credit_id", referencedColumnName = "id")
     private Credit credit;
