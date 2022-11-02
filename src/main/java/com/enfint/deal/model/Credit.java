@@ -36,7 +36,10 @@ public class Credit {
     @Column(name = "credit_status")
     private CreditStatus creditStatus;
 
-    @OneToOne(mappedBy = "credit")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "application_id",referencedColumnName = "id")
     Application application;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "client_id",referencedColumnName = "id")
+    Credit client;
 }

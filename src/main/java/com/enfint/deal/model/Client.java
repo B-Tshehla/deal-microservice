@@ -53,8 +53,11 @@ public class Client {
     @Column(name = "account")
     private String account;
 
-    @OneToOne(mappedBy = "client")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "application_id",referencedColumnName = "id")
     Application application;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "credit_id",referencedColumnName = "id")
+    Credit credit;
 }
 

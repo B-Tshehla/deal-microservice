@@ -39,4 +39,6 @@ public class Application {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "credit_id", referencedColumnName = "id")
     private Credit credit;
+
+
 }
