@@ -4,7 +4,7 @@ import com.enfint.deal.dto.CreditDTO;
 import com.enfint.deal.dto.LoanApplicationRequestDTO;
 import com.enfint.deal.dto.LoanOfferDTO;
 import com.enfint.deal.dto.ScoringDataDTO;
-import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 

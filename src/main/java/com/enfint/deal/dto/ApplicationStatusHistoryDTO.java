@@ -1,15 +1,19 @@
 package com.enfint.deal.dto;
 
+import com.enfint.deal.dataEnum.ChangeType;
 import com.enfint.deal.dataEnum.Status;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 
 @Data
+@AllArgsConstructor
 public class ApplicationStatusHistoryDTO {
     private Status status;
-    private LocalDateTime time;
-    private Status changeType;
+    private LocalDate time;
+    private ChangeType changeType;
 }
 
