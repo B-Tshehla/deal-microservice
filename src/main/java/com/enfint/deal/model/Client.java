@@ -21,7 +21,7 @@ import java.time.LocalDate;
 @Data
 public class Client {
     @Id
-    @SequenceGenerator(name = "client_sequence", sequenceName = "clicent_sequence", allocationSize = 1)
+    @SequenceGenerator(name = "client_sequence", sequenceName = "client_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "client_sequence")
 
     private Long id;
@@ -43,7 +43,6 @@ public class Client {
     private MaritalStatus maritalStatus;
     @Column(name = "dependent_number")
     private Integer dependentNumber;
-
     @Column(name = "passport", columnDefinition = "jsonb")
     @Type(type = "jsonb")
     private Passport passport;

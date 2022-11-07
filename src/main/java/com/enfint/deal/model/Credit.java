@@ -27,7 +27,7 @@ public class Credit {
     @Column(name = "full_loan_cost")
     private BigDecimal flc;
     @Type(type = "jsonb")
-    @Column(name = "paymentSchedule")
+    @Column(name = "paymentSchedule", columnDefinition = "jsonb")
     private List<PaymentScheduleElement> paymentSchedule;
     @Column(name = "is_insurance_enabled")
     private Boolean isInsuranceEnabled;

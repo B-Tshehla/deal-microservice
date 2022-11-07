@@ -1,15 +1,13 @@
 package com.enfint.deal.service;
 
-import com.enfint.deal.dataEnum.ChangeType;
-import com.enfint.deal.dataEnum.Status;
-import com.enfint.deal.dto.ApplicationStatusHistoryDTO;
-import com.enfint.deal.dto.LoanApplicationRequestDTO;
-import com.enfint.deal.dto.LoanOfferDTO;
-import com.enfint.deal.dto.Passport;
+
+import com.enfint.deal.dto.*;
 import com.enfint.deal.fiegnClient.ConveyorClient;
 import com.enfint.deal.model.Application;
 import com.enfint.deal.model.Client;
+import com.enfint.deal.model.Credit;
 import com.enfint.deal.repository.ApplicationRepository;
+import com.enfint.deal.repository.CreditRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +17,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.enfint.deal.dataEnum.ChangeType.*;
+import static com.enfint.deal.dataEnum.CreditStatus.*;
 import static com.enfint.deal.dataEnum.Status.*;
 
 @Service
 @RequiredArgsConstructor
 public class ApplicationService {
     private final ApplicationRepository applicationRepository;
+    private final CreditRepository creditRepository;
     private final ConveyorClient conveyorClient;
     public List<LoanOfferDTO> getListOfLoanOffers(LoanApplicationRequestDTO loanApplicationRequest){
 
@@ -50,7 +50,7 @@ public class ApplicationService {
                 .setApplicationId(application.getId()))
                 .collect(Collectors.toList());
 
-    };
+    }
 
     @Transactional
     public void updateApplication(LoanOfferDTO loanOffer) {
@@ -68,6 +68,41 @@ public class ApplicationService {
         );
         application.setAppliedOffer(loanOffer);
         applicationRepository.save(application);
+    }
+
+    @Transactional
+    public void creditCreation(Long applicationId, ScoringDataDTO scoringData){
+        Credit credit = new Credit();
+        Passport passport = new Passport();
+        Application application = applicationRepository
+                .findById(applicationId)
+                .orElseThrow(() -> new RuntimeException("Application does not exist"));
+
+        CreditDTO conveyorCredit = conveyorClient.getCredit(scoringData);
+        Client client = application.getClient();
+        client.setDependentNumber(scoringData.getDependentAmount());
+        client.setAccount(scoringData.getAccount());
+        client.setGender(scoringData.getGender());
+        client.setMaritalStatus(scoringData.getMaritalStatus());
+        client.setEmployment(scoringData.getEmployment());
+        passport.setSeries(scoringData.getPassportSeries());
+        passport.setNumber(scoringData.getPassportNumber());
+        passport.setIssue_date(scoringData.getPassportIssueDate());
+        passport.setIssue_branch(scoringData.getPassportIssueBranch());
+        client.setPassport(passport);
+        credit.setAmount(conveyorCredit.getAmount());
+        credit.setTerm(conveyorCredit.getTerm());
+        credit.setRate(conveyorCredit.getRate());
+        credit.setFlc(conveyorCredit.getPsk());
+        credit.setIsInsuranceEnabled(conveyorCredit.getIsInsuranceEnabled());
+        credit.setIsSalaryClient(conveyorCredit.getIsSalaryClient());
+        credit.setPaymentSchedule(conveyorCredit.getPaymentSchedule());
+        credit.setCreditStatus(CALCULATED);
+        application.setCredit(credit);
+        credit.setApplication(application);
+        applicationRepository.save(application);
+        creditRepository.save(credit);
+
     }
 
 }
