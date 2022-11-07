@@ -2,6 +2,7 @@ package com.enfint.deal.service;
 
 
 import com.enfint.deal.dto.*;
+import com.enfint.deal.exception.RecordNotFoundException;
 import com.enfint.deal.fiegnClient.ConveyorClient;
 import com.enfint.deal.model.Application;
 import com.enfint.deal.model.Client;
@@ -56,7 +57,7 @@ public class ApplicationService {
     public void updateApplication(LoanOfferDTO loanOffer) {
         Application application = applicationRepository
                 .findById(loanOffer.getApplicationId())
-                .orElseThrow(() -> new RuntimeException("Application does not exist"));
+                .orElseThrow(() ->  new RecordNotFoundException("The record not found"));
         application.setStatus(PREAPPROVAL);
         application.setStatusHistory(List.of(
                         new ApplicationStatusHistoryDTO(
@@ -76,7 +77,7 @@ public class ApplicationService {
         Passport passport = new Passport();
         Application application = applicationRepository
                 .findById(applicationId)
-                .orElseThrow(() -> new RuntimeException("Application does not exist"));
+                .orElseThrow(() -> new RecordNotFoundException("The record not found"));
 
         CreditDTO conveyorCredit = conveyorClient.getCredit(scoringData);
         Client client = application.getClient();
@@ -101,8 +102,5 @@ public class ApplicationService {
         application.setCredit(credit);
         credit.setApplication(application);
         applicationRepository.save(application);
-        creditRepository.save(credit);
-
     }
-
 }
