@@ -6,9 +6,7 @@ import com.enfint.deal.dataEnum.MaritalStatus;
 import com.enfint.deal.dto.EmploymentDTO;
 import com.enfint.deal.dto.Passport;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-
-
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -16,9 +14,12 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 
+
 @Entity(name = "client")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 public class Client {
     @Id
     @SequenceGenerator(name = "client_sequence", sequenceName = "client_sequence", allocationSize = 1)
@@ -54,5 +55,6 @@ public class Client {
 
     @OneToOne(mappedBy = "client")
     Application application;
+
 }
 
