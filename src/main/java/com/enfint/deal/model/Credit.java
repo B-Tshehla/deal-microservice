@@ -3,18 +3,29 @@ package com.enfint.deal.model;
 import com.enfint.deal.dataEnum.CreditStatus;
 import com.enfint.deal.dto.PaymentScheduleElement;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import lombok.Data;
-import lombok.experimental.Accessors;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.GenerationType;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Entity(name = "credit")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 public class Credit {
     @Id
     @SequenceGenerator(name = "credit_sequence", sequenceName = "credit_sequence", allocationSize = 1)
@@ -37,5 +48,5 @@ public class Credit {
     private CreditStatus creditStatus;
 
     @OneToOne(mappedBy = "credit")
-    Application application;
+    private Application application;
 }

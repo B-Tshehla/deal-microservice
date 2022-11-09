@@ -1,14 +1,19 @@
 package com.enfint.deal.service;
 
 
-import com.enfint.deal.dto.*;
+
+import com.enfint.deal.dto.ApplicationStatusHistoryDTO;
+import com.enfint.deal.dto.LoanOfferDTO;
+import com.enfint.deal.dto.CreditDTO;
+import com.enfint.deal.dto.Passport;
+import com.enfint.deal.dto.ScoringDataDTO;
+import com.enfint.deal.dto.LoanApplicationRequestDTO;
 import com.enfint.deal.exception.RecordNotFoundException;
 import com.enfint.deal.fiegnClient.ConveyorClient;
 import com.enfint.deal.model.Application;
 import com.enfint.deal.model.Client;
 import com.enfint.deal.model.Credit;
 import com.enfint.deal.repository.ApplicationRepository;
-import com.enfint.deal.repository.CreditRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,19 +23,18 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.enfint.deal.dataEnum.ChangeType.*;
-import static com.enfint.deal.dataEnum.CreditStatus.*;
-import static com.enfint.deal.dataEnum.Status.*;
+import static com.enfint.deal.dataEnum.ChangeType.UPDATED;
+import static com.enfint.deal.dataEnum.CreditStatus.CALCULATED;
+import static com.enfint.deal.dataEnum.Status.PREAPPROVAL;
+
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ApplicationService {
     private final ApplicationRepository applicationRepository;
-    private final CreditRepository creditRepository;
     private final ConveyorClient conveyorClient;
     public List<LoanOfferDTO> getListOfLoanOffers(LoanApplicationRequestDTO loanApplicationRequest){
-
         Client client = new Client();
         Passport passport = new Passport();
         Application application = new Application();

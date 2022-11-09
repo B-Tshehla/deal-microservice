@@ -6,13 +6,24 @@ import com.enfint.deal.dataEnum.MaritalStatus;
 import com.enfint.deal.dto.EmploymentDTO;
 import com.enfint.deal.dto.Passport;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import lombok.*;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.GenerationType;
+import javax.persistence.Enumerated;
 import java.time.LocalDate;
 
+import static javax.persistence.EnumType.STRING;
 
 
 @Entity(name = "client")
@@ -37,10 +48,10 @@ public class Client {
     @Column(name = "email", unique = true, columnDefinition = "VARCHAR(70)")
     private String email;
     @Column(name = "gender")
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     private Gender gender;
     @Column(name = "marital_status")
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     private MaritalStatus maritalStatus;
     @Column(name = "dependent_number")
     private Integer dependentNumber;
@@ -52,9 +63,8 @@ public class Client {
     private EmploymentDTO employment;
     @Column(name = "account")
     private String account;
-
     @OneToOne(mappedBy = "client")
-    Application application;
+    private Application application;
 
 }
 
