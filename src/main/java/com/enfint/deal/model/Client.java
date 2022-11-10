@@ -7,9 +7,7 @@ import com.enfint.deal.dto.EmploymentDTO;
 import com.enfint.deal.dto.Passport;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -30,7 +28,9 @@ import static javax.persistence.EnumType.STRING;
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @Getter
 @Setter
+@Builder
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Client {
     @Id
     @SequenceGenerator(name = "client_sequence", sequenceName = "client_sequence", allocationSize = 1)

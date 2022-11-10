@@ -5,9 +5,7 @@ import com.enfint.deal.dto.ApplicationStatusHistoryDTO;
 import com.enfint.deal.dto.LoanOfferDTO;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -33,6 +31,8 @@ import static javax.persistence.EnumType.STRING;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Application implements Serializable {
     @Id
     @SequenceGenerator(name = "application_sequence", sequenceName = "application_sequence", allocationSize = 1)

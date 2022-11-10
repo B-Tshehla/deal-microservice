@@ -35,23 +35,32 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final ConveyorClient conveyorClient;
     public List<LoanOfferDTO> getListOfLoanOffers(LoanApplicationRequestDTO loanApplicationRequest){
-        Client client = new Client();
-        Passport passport = new Passport();
-        Application application = new Application();
-        log.info("******************** Client Information ********************");
-        client.setFirstName(loanApplicationRequest.getFirstName());
-        client.setLastName(loanApplicationRequest.getLastName());
-        client.setMiddleName(loanApplicationRequest.getMiddleName());
-        client.setEmail(loanApplicationRequest.getEmail());
-        client.setBirthDate(loanApplicationRequest.getBirthdate());
+
         log.info("******************** Passport information ********************");
-        passport.setSeries(loanApplicationRequest.getPassportSeries());
-        passport.setNumber(loanApplicationRequest.getPassportNumber());
+        Passport passport = Passport
+                .builder()
+                .series(loanApplicationRequest.getPassportSeries())
+                .number(loanApplicationRequest.getPassportNumber())
+                .build();
         log.info("passport {} ", passport);
-        application.setCreationDate(LocalDate.now());
-        application.setClient(client);
-        client.setApplication(application);
+        log.info("******************** Client Information ********************");
+        Client client = Client
+                .builder()
+                .firstName(loanApplicationRequest.getFirstName())
+                .lastName(loanApplicationRequest.getLastName())
+                .middleName(loanApplicationRequest.getMiddleName())
+                .email(loanApplicationRequest.getEmail())
+                .passport(passport)
+                .birthDate(loanApplicationRequest.getBirthdate())
+                .build();
         log.info("client {} ",client);
+        log.info("******************** Application Information ********************");
+        Application application = Application
+                .builder()
+                .creationDate(LocalDate.now())
+                .client(client)
+                .build();
+        client.setApplication(application);
         log.info("application {} ", application);
 
         applicationRepository.save(application);
@@ -73,16 +82,16 @@ public class ApplicationService {
                 .orElseThrow(() ->  new RecordNotFoundException("The record not found"));
         log.info("application {} ", application);
         application.setStatus(PREAPPROVAL);
+        application.setStatusHistory(
+                List.of(
+                ApplicationStatusHistoryDTO
+                        .builder()
+                        .status(PREAPPROVAL)
+                        .time(LocalDate.now())
+                        .changeType(UPDATED)
+                        .build()
+        ));
         log.info("application status {} ", application.getStatus());
-        application.setStatusHistory(List.of(
-                        new ApplicationStatusHistoryDTO(
-                        PREAPPROVAL,
-                        LocalDate.now(),
-                        UPDATED
-                        )
-                )
-
-        );
         log.info("application status history {} ", application.getStatusHistory());
         application.setAppliedOffer(loanOffer);
         log.info("applied offer {} ", application.getAppliedOffer());
@@ -91,8 +100,6 @@ public class ApplicationService {
 
     @Transactional
     public void creditCreation(Long applicationId, ScoringDataDTO scoringData){
-        Credit credit = new Credit();
-        Passport passport = new Passport();
         Application application = applicationRepository
                 .findById(applicationId)
                 .orElseThrow(() -> new RecordNotFoundException("The record not found"));
@@ -107,25 +114,30 @@ public class ApplicationService {
         client.setMaritalStatus(scoringData.getMaritalStatus());
         client.setEmployment(scoringData.getEmployment());
         log.info("******************** Passport information ********************");
-        passport.setSeries(scoringData.getPassportSeries());
-        passport.setNumber(scoringData.getPassportNumber());
-        passport.setIssue_date(scoringData.getPassportIssueDate());
-        passport.setIssue_branch(scoringData.getPassportIssueBranch());
+        Passport passport = Passport
+                .builder()
+                .series(scoringData.getPassportSeries())
+                .issue_date(scoringData.getPassportIssueDate())
+                .issue_branch(scoringData.getPassportIssueBranch())
+                .number(scoringData.getPassportNumber())
+                .build();
         log.info("passport {} ", passport);
         client.setPassport(passport);
         log.info("client {} ", client);
-
         log.info("******************** Credit information ********************");
-        credit.setAmount(conveyorCredit.getAmount());
-        credit.setTerm(conveyorCredit.getTerm());
-        credit.setRate(conveyorCredit.getRate());
-        credit.setFlc(conveyorCredit.getPsk());
-        credit.setIsInsuranceEnabled(conveyorCredit.getIsInsuranceEnabled());
-        credit.setIsSalaryClient(conveyorCredit.getIsSalaryClient());
-        credit.setPaymentSchedule(conveyorCredit.getPaymentSchedule());
-        credit.setCreditStatus(CALCULATED);
+        Credit credit =  Credit
+                .builder()
+                .creditStatus(CALCULATED)
+                .flc(conveyorCredit.getPsk())
+                .amount(conveyorCredit.getAmount())
+                .application(application)
+                .term(conveyorCredit.getTerm())
+                .rate(conveyorCredit.getRate())
+                .isSalaryClient(conveyorCredit.getIsSalaryClient())
+                .isInsuranceEnabled(conveyorCredit.getIsInsuranceEnabled())
+                .paymentSchedule(conveyorCredit.getPaymentSchedule())
+                .build();
         application.setCredit(credit);
-        credit.setApplication(application);
         log.info("client {} ", client);
         applicationRepository.save(application);
     }

@@ -4,9 +4,7 @@ import com.enfint.deal.dataEnum.CreditStatus;
 import com.enfint.deal.dto.PaymentScheduleElement;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -26,6 +24,8 @@ import java.util.List;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Credit {
     @Id
     @SequenceGenerator(name = "credit_sequence", sequenceName = "credit_sequence", allocationSize = 1)
