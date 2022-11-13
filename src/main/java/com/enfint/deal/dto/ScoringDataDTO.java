@@ -3,13 +3,19 @@ package com.enfint.deal.dto;
 
 import com.enfint.deal.dataEnum.Gender;
 import com.enfint.deal.dataEnum.MaritalStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ScoringDataDTO {
     private BigDecimal amount;
     private Integer term;
