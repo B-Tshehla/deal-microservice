@@ -27,7 +27,7 @@ import static javax.persistence.EnumType.STRING;
 
 
 @Entity(name = "application")
-@TypeDef(name = "json", typeClass = JsonBinaryType.class)
+@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -43,14 +43,14 @@ public class Application implements Serializable {
     @Column(name = "creation_date")
     private LocalDate creationDate;
     @Column(name = "applied_offer", columnDefinition = "jsonb")
-    @Type(type = "json")
+    @Type(type = "jsonb")
     private LoanOfferDTO appliedOffer;
     @Column(name = "sign_date")
     private LocalDate signDate;
     @Column(name = "ses_code")
-    private String sesCode;
+    private int sesCode;
     @Column(name = "status_history", columnDefinition = "jsonb")
-    @Type(type = "json")
+    @Type(type = "jsonb")
     private List<ApplicationStatusHistoryDTO> statusHistory;
     @OneToOne(cascade = ALL)
     @JoinColumn(name = "client_id", referencedColumnName = "id")

@@ -38,13 +38,14 @@ public class Credit {
     @Column(name = "full_loan_cost")
     private BigDecimal flc;
     @Type(type = "jsonb")
-    @Column(name = "paymentSchedule", columnDefinition = "jsonb")
+    @Column(name = "payment_schedule", columnDefinition = "jsonb")
     private List<PaymentScheduleElement> paymentSchedule;
     @Column(name = "is_insurance_enabled")
     private Boolean isInsuranceEnabled;
     @Column(name = "is_salary_client")
     private Boolean isSalaryClient;
-    @Column(name = "credit_status")
+    @Type(type = "jsonb")
+    @Column(name = "credit_status", columnDefinition = "jsonb")
     private CreditStatus creditStatus;
 
     @OneToOne(mappedBy = "credit")
