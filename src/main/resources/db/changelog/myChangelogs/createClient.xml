@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="02" author="Boitumelo Tshehla">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="client"/>
+            </not>
+        </preConditions>
+        <createTable tableName="client">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="client_id_pk" />
+            </column>
+            <column name="last_name" type="varchar(30)"/>
+            <column name="first_name" type="varchar(30)"/>
+            <column name="middle_name" type="varchar(30)"/>
+            <column name="birth_date" type="date"/>
+            <column name="email" type="varchar(70)">
+                <constraints unique="true" uniqueConstraintName="email_unq" />
+            </column>
+            <column name="gender" type="varchar(255)"/>
+            <column name="marital_status" type="varchar(255)"/>
+            <column name="dependent_number" type="int"/>
+            <column name="passport" type="jsonb"/>
+            <column name="employment" type="jsonb"/>
+            <column name="account" type="varchar(255)"/>
+        </createTable>
+     <createSequence sequenceName="client_sequence" incrementBy="1" startValue="1" />
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="01" author="Boitumelo Tshehla">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="application"/>
+            </not>
+        </preConditions>
+        <createTable tableName="application">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="application_id_pk" />
+            </column>
+            <column name="status" type="varchar(255)"/>
+            <column name="creation_date" type="date"/>
+            <column name="applied_offer" type="jsonb"/>
+            <column name="sign_date" type="date"/>
+            <column name="ses_code" type="int"/>
+            <column name="status_history" type="jsonb"/>
+            <column name="client_id" type="bigint"/>
+            <column name="credit_id" type="bigint"/>
+        </createTable>
+        <createSequence sequenceName="application_sequence" incrementBy="1" startValue="1" />
+        <addForeignKeyConstraint baseTableName="application" baseColumnNames="client_id" constraintName="client_id_fk" referencedTableName="client" referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="application" baseColumnNames="credit_id" constraintName="credit_id_fk" referencedTableName="credit" referencedColumnNames="id" />
+    </changeSet>
+</databaseChangeLog>
