@@ -48,23 +48,53 @@ class ApplicationServiceTest {
     @BeforeEach
     void setUp() {
         underTest = new ApplicationService(applicationRepository, conveyorClient);
-        loanOffer = LoanOfferDTO.builder()
-                .applicationId(1L)
-                .requestedAmount(BigDecimal.valueOf(10000))
-                .totalAmount(BigDecimal.valueOf(10747.90))
-                .term(10)
-                .monthlyPayment(BigDecimal.valueOf(1074.79))
-                .rate(BigDecimal.valueOf(16))
-                .isInsuranceEnabled(false)
-                .isSalaryClient(true)
-                .build();
+
     }
 
     @Test
     void shouldGetListOfLoanOffersAndVerifyDataCapture() {
         //Given
         List<LoanOfferDTO> listOffers = List.of(
-                loanOffer,loanOffer,loanOffer,loanOffer
+                LoanOfferDTO.builder()
+                        .applicationId(1L)
+                        .requestedAmount(BigDecimal.valueOf(10000))
+                        .totalAmount(BigDecimal.valueOf(11132.70))
+                        .term(10)
+                        .monthlyPayment(BigDecimal.valueOf(1113.27))
+                        .rate(BigDecimal.valueOf(24))
+                        .isInsuranceEnabled(false)
+                        .isSalaryClient(false)
+                        .build(),
+                LoanOfferDTO.builder()
+                        .applicationId(1L)
+                        .requestedAmount(BigDecimal.valueOf(10000))
+                        .totalAmount(BigDecimal.valueOf(10747.90))
+                        .term(10)
+                        .monthlyPayment(BigDecimal.valueOf(1074.79))
+                        .rate(BigDecimal.valueOf(16))
+                        .isInsuranceEnabled(false)
+                        .isSalaryClient(true)
+                        .build(),
+                LoanOfferDTO.builder()
+                        .applicationId(1L)
+                        .requestedAmount(BigDecimal.valueOf(10000))
+                        .totalAmount(BigDecimal.valueOf(10652.90))
+                        .term(10)
+                        .monthlyPayment(BigDecimal.valueOf(1065.29))
+                        .rate(BigDecimal.valueOf(14))
+                        .isInsuranceEnabled(true)
+                        .isSalaryClient(false)
+                        .build(),
+                LoanOfferDTO.builder()
+                        .applicationId(1L)
+                        .requestedAmount(BigDecimal.valueOf(10000))
+                        .totalAmount(BigDecimal.valueOf(10277.10))
+                        .term(10)
+                        .monthlyPayment(BigDecimal.valueOf(1027.71))
+                        .rate(BigDecimal.valueOf(6))
+                        .isInsuranceEnabled(true)
+                        .isSalaryClient(true)
+                        .build()
         );
         LoanApplicationRequestDTO loanApplicationRequest = LoanApplicationRequestDTO.builder()
                 .email("boitumelotshehla@gmail.com")
@@ -97,6 +127,16 @@ class ApplicationServiceTest {
                 .creationDate(LocalDate.now())
                 .client(new Client())
                 .build();
+        loanOffer = LoanOfferDTO.builder()
+                .applicationId(1L)
+                .requestedAmount(BigDecimal.valueOf(10000))
+                .totalAmount(BigDecimal.valueOf(10747.90))
+                .term(10)
+                .monthlyPayment(BigDecimal.valueOf(1074.79))
+                .rate(BigDecimal.valueOf(16))
+                .isInsuranceEnabled(false)
+                .isSalaryClient(true)
+                .build();
         //When
         when(applicationRepository.findById(id)).thenReturn(Optional.ofNullable(application));
         underTest.updateApplication(loanOffer);
@@ -113,6 +153,16 @@ class ApplicationServiceTest {
                 .id(1L)
                 .creationDate(LocalDate.now())
                 .client(new Client())
+                .build();
+        loanOffer = LoanOfferDTO.builder()
+                .applicationId(1L)
+                .requestedAmount(BigDecimal.valueOf(10000))
+                .totalAmount(BigDecimal.valueOf(10747.90))
+                .term(10)
+                .monthlyPayment(BigDecimal.valueOf(1074.79))
+                .rate(BigDecimal.valueOf(16))
+                .isInsuranceEnabled(false)
+                .isSalaryClient(true)
                 .build();
         assertThatThrownBy(()-> underTest.updateApplication(loanOffer))
                 .isInstanceOf(RecordNotFoundException.class)
