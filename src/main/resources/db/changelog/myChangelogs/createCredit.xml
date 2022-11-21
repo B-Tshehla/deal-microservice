@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="create_credit_table" author="Boitumelo Tshehla">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="credit"/>
+            </not>
+        </preConditions>
+        <createTable tableName="credit">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="credit_id_pk" />
+            </column>
+            <column name="amount" type="numeric(19, 2)"/>
+            <column name="term" type="int"/>
+            <column name="rate" type="numeric(19, 2)"/>
+            <column name="full_loan_cost" type="numeric(19, 2)"/>
+            <column name="payment_schedule" type="jsonb"/>
+            <column name="is_insurance_enabled" type="boolean"/>
+            <column name="is_salary_client" type="boolean"/>
+            <column name="credit_status" type="jsonb"/>
+        </createTable>
+        <createSequence sequenceName="credit_sequence" incrementBy="1" startValue="1" />
+    </changeSet>
+</databaseChangeLog>
