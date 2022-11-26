@@ -5,7 +5,11 @@ import com.enfint.deal.dto.ApplicationStatusHistoryDTO;
 import com.enfint.deal.dto.LoanOfferDTO;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
