@@ -1,4 +1,4 @@
-package com.enfint.deal.exception;
+package com.enfint.deal.exception.recordNotFound;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

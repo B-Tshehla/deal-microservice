@@ -1,5 +1,7 @@
-package com.enfint.deal.exception;
+package com.enfint.deal.exception.recordNotFound;
 
+
+import com.enfint.deal.exception.applicationDenied.ApplicationDeniedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -7,12 +9,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ControllerAdvice
-public class RecordNotFoundHandler {
+public class RecordNotFoundExceptionHandler {
 
-    @ExceptionHandler(value = {RecordNotFoundException.class})
+    @ExceptionHandler(value = {ApplicationDeniedException.class})
     public ResponseEntity<Object> handleRecordNotFoundException(RecordNotFoundException e){
         RecordNotFound recordNotFound = new RecordNotFound(
                 e.getMessage(),
@@ -22,5 +24,4 @@ public class RecordNotFoundHandler {
 
         return new ResponseEntity<>(recordNotFound, NOT_FOUND);
     }
-
 }
