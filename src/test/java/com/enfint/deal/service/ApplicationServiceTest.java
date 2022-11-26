@@ -6,8 +6,9 @@ import com.enfint.deal.dto.ScoringDataDTO;
 import com.enfint.deal.dto.EmploymentDTO;
 import com.enfint.deal.dto.CreditDTO;
 import com.enfint.deal.dto.LoanApplicationRequestDTO;
-import com.enfint.deal.exception.RecordNotFoundException;
+import com.enfint.deal.exception.recordNotFound.RecordNotFoundException;
 import com.enfint.deal.fiegnClient.ConveyorClient;
+import com.enfint.deal.kafka.MessageProducer;
 import com.enfint.deal.model.Application;
 import com.enfint.deal.model.Client;
 import com.enfint.deal.repository.ApplicationRepository;
@@ -40,6 +41,9 @@ class ApplicationServiceTest {
     private ApplicationRepository applicationRepository;
     @Mock
     private ConveyorClient conveyorClient;
+
+    @Mock
+    private MessageProducer messageProducer;
     @InjectMocks
     private ApplicationService underTest;
     private LoanOfferDTO loanOffer;
@@ -47,7 +51,7 @@ class ApplicationServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new ApplicationService(applicationRepository, conveyorClient);
+        underTest = new ApplicationService(applicationRepository, conveyorClient,messageProducer);
 
     }
 

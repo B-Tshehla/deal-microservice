@@ -4,7 +4,7 @@ import com.enfint.deal.dto.EmploymentDTO;
 import com.enfint.deal.dto.LoanApplicationRequestDTO;
 import com.enfint.deal.dto.LoanOfferDTO;
 import com.enfint.deal.dto.ScoringDataDTO;
-import com.enfint.deal.exception.RecordNotFoundException;
+import com.enfint.deal.exception.recordNotFound.RecordNotFoundException;
 import com.enfint.deal.service.ApplicationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
