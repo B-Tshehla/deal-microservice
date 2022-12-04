@@ -41,7 +41,7 @@ class ApplicationServiceTest {
     private ApplicationRepository applicationRepository;
     @Mock
     private ConveyorClient conveyorClient;
-
+    private DocumentService documentService;
     @Mock
     private MessageProducer messageProducer;
     @InjectMocks
@@ -51,7 +51,7 @@ class ApplicationServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new ApplicationService(applicationRepository, conveyorClient,messageProducer);
+        underTest = new ApplicationService(applicationRepository, conveyorClient,messageProducer,documentService);
 
     }
 

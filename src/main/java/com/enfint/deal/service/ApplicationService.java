@@ -33,8 +33,7 @@ import static com.enfint.deal.dataEnum.CreditStatus.CALCULATED;
 import static com.enfint.deal.dataEnum.Status.PREAPPROVAL;
 import static com.enfint.deal.dataEnum.Status.CC_APPROVED;
 import static com.enfint.deal.dataEnum.Status.CC_DENIED;
-import static com.enfint.deal.dataEnum.Theme.APPLICATION_DENIED;
-import static com.enfint.deal.dataEnum.Theme.FINISH_REGISTRATION;
+import static com.enfint.deal.dataEnum.Theme.*;
 
 
 @Service
@@ -44,6 +43,7 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final ConveyorClient conveyorClient;
     private final MessageProducer messageProducer;
+    private final DocumentService documentService;
     public List<LoanOfferDTO> getListOfLoanOffers(LoanApplicationRequestDTO loanApplicationRequest){
 
         log.info("******************** Passport information ********************");
@@ -128,15 +128,6 @@ public class ApplicationService {
         try {
             conveyorCredit = conveyorClient.getCredit(scoringData);
             log.info("Credit from conveyor {} ", conveyorCredit);
-            application.setStatus(CC_APPROVED);
-            applicationStatusHistoryList.add(
-                    ApplicationStatusHistoryDTO
-                            .builder()
-                            .status(CC_APPROVED)
-                            .time(LocalDate.now())
-                            .changeType(MANUAL)
-                            .build());
-            application.setStatusHistory(applicationStatusHistoryList);
         }catch (Exception e){
             log.info("Credit conveyor denied application {}",e.getMessage());
             application.setStatus(CC_DENIED);
@@ -158,6 +149,16 @@ public class ApplicationService {
             return;
         }
 
+        application.setStatus(CC_APPROVED);
+        applicationStatusHistoryList.add(
+                ApplicationStatusHistoryDTO
+                        .builder()
+                        .status(CC_APPROVED)
+                        .time(LocalDate.now())
+                        .changeType(MANUAL)
+                        .build());
+        application.setStatusHistory(applicationStatusHistoryList);
+       documentService.sendingCreateDocuments(applicationId);
 
         Client client = application.getClient();
         log.info("******************** Client information ********************");

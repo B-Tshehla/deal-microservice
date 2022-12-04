@@ -97,6 +97,7 @@ public class DocumentService {
             log.info("SES code is incorrect");
             throw new ApplicationDeniedException("SES code is incorrect");
         }
+        application.setStatus(Status.DOCUMENT_SIGNED);
         applicationStatusHistoryList = application.getStatusHistory();
         applicationStatusHistoryList.add(ApplicationStatusHistoryDTO
                 .builder()
@@ -106,6 +107,7 @@ public class DocumentService {
                 .build());
         application.setStatusHistory(applicationStatusHistoryList);
 
+        application.setStatus(Status.CREDIT_ISSUED);
         applicationStatusHistoryList.add(ApplicationStatusHistoryDTO
                 .builder()
                 .status(Status.CREDIT_ISSUED)

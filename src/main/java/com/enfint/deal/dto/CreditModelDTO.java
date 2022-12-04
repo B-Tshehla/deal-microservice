@@ -1,7 +1,7 @@
 package com.enfint.deal.dto;
 
 
-
+import com.enfint.deal.dataEnum.CreditStatus;
 import com.enfint.deal.model.Application;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,19 +12,18 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class CreditDTO {
+public class CreditModelDTO {
+    private Long id;
     private BigDecimal amount;
     private Integer term;
-    private BigDecimal monthlyPayment;
     private BigDecimal rate;
-    private BigDecimal psk;
+    private BigDecimal flc;
+    private List<PaymentScheduleElement> paymentSchedule;
     private Boolean isInsuranceEnabled;
     private Boolean isSalaryClient;
-    private List<PaymentScheduleElement> paymentSchedule;
-    private Application application;
+    private CreditStatus creditStatus;
+
 }
-
-

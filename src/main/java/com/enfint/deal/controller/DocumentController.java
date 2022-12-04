@@ -4,6 +4,7 @@ package com.enfint.deal.controller;
 
 import com.enfint.deal.service.DocumentService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RestController
 @RequestMapping("/deal/document")
 @RequiredArgsConstructor
+@Slf4j
 public class DocumentController {
 
     private final DocumentService documentService;
@@ -29,6 +31,7 @@ public class DocumentController {
 
     @PostMapping("/{applicationId}/code")
     public void documentsCode(@PathVariable("applicationId") Long applicationId,@RequestBody Integer sesCode){
+        log.info("sesCode {} ", sesCode);
         documentService.verifySesCode(applicationId,sesCode);
     }
 }
