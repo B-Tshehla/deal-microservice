@@ -4,14 +4,14 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
 		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
-    <changeSet id="02" author="Boitumelo Tshehla">
+    <changeSet id="create_client_table" author="Boitumelo Tshehla">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="client"/>
             </not>
         </preConditions>
         <createTable tableName="client">
-            <column name="create_client_table" type="bigint">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true" primaryKeyName="client_id_pk" />
             </column>
             <column name="last_name" type="varchar(30)"/>

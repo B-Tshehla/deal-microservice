@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
-
-
 import java.util.List;
 
 @RestController
@@ -26,25 +24,24 @@ public class DealController {
     private final ApplicationService applicationService;
 
     @PostMapping("/application")
-    public List<LoanOfferDTO> getLoanOffers(@RequestBody LoanApplicationRequestDTO loanApplicationRequest){
+    public List<LoanOfferDTO> getLoanOffers(@RequestBody LoanApplicationRequestDTO loanApplicationRequest) {
         log.info("******************** Getting Loan Offers ********************");
-        log.info("loanApplicationRequest {} ",loanApplicationRequest);
+        log.info("loanApplicationRequest {} ", loanApplicationRequest);
         return applicationService.getListOfLoanOffers(loanApplicationRequest);
     }
 
     @PutMapping("/offer")
-    public void updateApplication(@RequestBody LoanOfferDTO loanOffer){
+    public void updateApplication(@RequestBody LoanOfferDTO loanOffer) {
         log.info("******************** Updating Application ********************");
-        log.info("loanOffer {} ",loanOffer);
+        log.info("loanOffer {} ", loanOffer);
         applicationService.updateApplication(loanOffer);
     }
 
     @PutMapping("calculate/{applicationId}")
-    public void updateCredit(@PathVariable("applicationId") Long applicationId,
-                             @RequestBody ScoringDataDTO scoringData){
+    public void updateCredit(@PathVariable("applicationId") Long applicationId, @RequestBody ScoringDataDTO scoringData) {
         log.info("******************** Creating credit ********************");
-        log.info("applicationId {} scoringData {}",applicationId,scoringData);
-        applicationService.creditCreation(applicationId,scoringData);
+        log.info("applicationId {} scoringData {}", applicationId, scoringData);
+        applicationService.creditCreation(applicationId, scoringData);
 
     }
 

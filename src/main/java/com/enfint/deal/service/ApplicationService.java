@@ -2,14 +2,18 @@ package com.enfint.deal.service;
 
 
 
-import com.enfint.deal.dto.ApplicationStatusHistoryDTO;
+
+
 import com.enfint.deal.dto.LoanOfferDTO;
-import com.enfint.deal.dto.CreditDTO;
-import com.enfint.deal.dto.Passport;
+import com.enfint.deal.dto.ApplicationStatusHistoryDTO;
+import com.enfint.deal.dto.EmailMessage;
 import com.enfint.deal.dto.ScoringDataDTO;
+import com.enfint.deal.dto.Passport;
 import com.enfint.deal.dto.LoanApplicationRequestDTO;
-import com.enfint.deal.exception.RecordNotFoundException;
+import com.enfint.deal.dto.CreditDTO;
+import com.enfint.deal.exception.recordNotFound.RecordNotFoundException;
 import com.enfint.deal.fiegnClient.ConveyorClient;
+import com.enfint.deal.kafka.MessageProducer;
 import com.enfint.deal.model.Application;
 import com.enfint.deal.model.Client;
 import com.enfint.deal.model.Credit;
@@ -23,9 +27,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.enfint.deal.dataEnum.ChangeType.UPDATED;
+import static com.enfint.deal.dataEnum.ChangeType.AUTOMATIC;
+import static com.enfint.deal.dataEnum.ChangeType.MANUAL;
 import static com.enfint.deal.dataEnum.CreditStatus.CALCULATED;
 import static com.enfint.deal.dataEnum.Status.PREAPPROVAL;
+import static com.enfint.deal.dataEnum.Status.CC_APPROVED;
+import static com.enfint.deal.dataEnum.Status.CC_DENIED;
+import static com.enfint.deal.dataEnum.Theme.*;
 
 
 @Service
@@ -34,6 +42,8 @@ import static com.enfint.deal.dataEnum.Status.PREAPPROVAL;
 public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final ConveyorClient conveyorClient;
+    private final MessageProducer messageProducer;
+    private final DocumentService documentService;
     public List<LoanOfferDTO> getListOfLoanOffers(LoanApplicationRequestDTO loanApplicationRequest){
 
         log.info("******************** Passport information ********************");
@@ -88,7 +98,7 @@ public class ApplicationService {
                         .builder()
                         .status(PREAPPROVAL)
                         .time(LocalDate.now())
-                        .changeType(UPDATED)
+                        .changeType(AUTOMATIC)
                         .build()
         ));
         log.info("application status {} ", application.getStatus());
@@ -96,16 +106,60 @@ public class ApplicationService {
         application.setAppliedOffer(loanOffer);
         log.info("applied offer {} ", application.getAppliedOffer());
         applicationRepository.save(application);
+
+        EmailMessage emailMessage = EmailMessage.builder()
+                .applicationId(application.getId())
+                .address(application.getClient().getEmail())
+                .theme(FINISH_REGISTRATION)
+                .build();
+        messageProducer.sendFinishRegistrationMessage(emailMessage);
+        log.info("message sent => {}" , emailMessage);
     }
 
     @Transactional
     public void creditCreation(Long applicationId, ScoringDataDTO scoringData){
+        CreditDTO conveyorCredit;
+        List<ApplicationStatusHistoryDTO> applicationStatusHistoryList;
         Application application = applicationRepository
                 .findById(applicationId)
                 .orElseThrow(() -> new RecordNotFoundException("The record not found"));
         log.info("application {} ",application);
-        CreditDTO conveyorCredit = conveyorClient.getCredit(scoringData);
-        log.info("Credit from conveyor {} ", conveyorCredit);
+        applicationStatusHistoryList = application.getStatusHistory();
+        try {
+            conveyorCredit = conveyorClient.getCredit(scoringData);
+            log.info("Credit from conveyor {} ", conveyorCredit);
+        }catch (Exception e){
+            log.info("Credit conveyor denied application {}",e.getMessage());
+            application.setStatus(CC_DENIED);
+            applicationStatusHistoryList.add(
+                    ApplicationStatusHistoryDTO
+                            .builder()
+                            .status(CC_DENIED)
+                            .time(LocalDate.now())
+                            .changeType(MANUAL)
+                            .build()
+            );
+            application.setStatusHistory(applicationStatusHistoryList);
+            EmailMessage message = EmailMessage.builder()
+                    .applicationId(applicationId)
+                    .theme(APPLICATION_DENIED)
+                    .address(application.getClient().getEmail())
+                    .build();
+            messageProducer.sendApplicationDeniedMessage(message);
+            return;
+        }
+
+        application.setStatus(CC_APPROVED);
+        applicationStatusHistoryList.add(
+                ApplicationStatusHistoryDTO
+                        .builder()
+                        .status(CC_APPROVED)
+                        .time(LocalDate.now())
+                        .changeType(MANUAL)
+                        .build());
+        application.setStatusHistory(applicationStatusHistoryList);
+       documentService.sendingCreateDocuments(applicationId);
+
         Client client = application.getClient();
         log.info("******************** Client information ********************");
         client.setDependentNumber(scoringData.getDependentAmount());
@@ -141,4 +195,5 @@ public class ApplicationService {
         log.info("client {} ", client);
         applicationRepository.save(application);
     }
+
 }

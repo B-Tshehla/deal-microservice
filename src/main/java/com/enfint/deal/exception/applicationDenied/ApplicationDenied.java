@@ -1,4 +1,4 @@
-package com.enfint.deal.exception;
+package com.enfint.deal.exception.applicationDenied;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,10 +8,9 @@ import java.time.ZonedDateTime;
 
 @Data
 @AllArgsConstructor
-public class RecordNotFound {
+public class ApplicationDenied {
     private String message;
     private HttpStatus httpStatus;
     private ZonedDateTime timestamp;
-
 
 }
